@@ -128,26 +128,24 @@
 
 						<!-- 이체 -->
 							<article id="send">
-								<h2 class="major">Contact</h2>
-								<form method="post" action="#">
+								<h2 class="major">이체하기</h2>
+								<form method="post" action="/owner/account?cmd=sendProc">
 									<div class="fields">
 										<div class="field half">
-											<label for="name">Name</label>
-											<input type="text" name="name" id="name" />
+											<label for="receiver">입금할 휴대폰 번호</label>
+											<input type="text" name="receiver" id="receiver" />
 										</div>
 										<div class="field half">
-											<label for="email">Email</label>
-											<input type="text" name="email" id="email" />
+											<label for="sendAmount">이체 금액</label>
+											<input type="text" name="sendAmount" id="sendAmount" />
 										</div>
-										<div class="field">
-											<label for="message">Message</label>
-											<textarea name="message" id="message" rows="4"></textarea>
+										<div class="field half">
+											<label for="pwd">내 비밀번호</label>
+											<input type="password" name="pwd" id="pwd" />
+											<input type="hidden" name="phone" id="phone" value="${sessionScope.principal.phone}" />
 										</div>
 									</div>
-									<ul class="actions">
-										<li><input type="submit" value="Send Message" class="primary" /></li>
-										<li><input type="reset" value="Reset" /></li>
-									</ul>
+										<input type="submit" value="이체" class="primary" />
 								</form>
 							</article>
 
