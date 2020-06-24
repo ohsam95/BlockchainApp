@@ -9,18 +9,16 @@ import java.security.NoSuchAlgorithmException;
 // 암호화+복호화 : Base64
 public class SHA256 {
 	
-	private final static String mSalt = "동현";
 	
     
     public static String encodeSha256(String source) {
         String result = "";
         
         byte[] a = source.getBytes();
-        byte[] salt = mSalt.getBytes();
-        byte[] bytes = new byte[a.length + salt.length];
         
-        System.arraycopy(a, 0, bytes, 0, a.length);
-        System.arraycopy(salt, 0, bytes, a.length, salt.length);
+        byte[] bytes = new byte[a.length];
+        
+ //       System.arraycopy(a, 0, bytes, 0, a.length);
         
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");

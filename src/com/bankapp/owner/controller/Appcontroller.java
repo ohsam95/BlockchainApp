@@ -13,6 +13,8 @@ import com.bankapp.owner.action.HomeAction;
 import com.bankapp.owner.action.JoinProcAction;
 import com.bankapp.owner.action.LoginProcAction;
 import com.bankapp.owner.action.LogoutAction;
+
+import com.bankapp.owner.action.SendLogProcAction;
 import com.bankapp.owner.action.SendProcAction;
 
 
@@ -53,7 +55,9 @@ public class Appcontroller extends HttpServlet {
 			return new ChargeProcAction();
 		}else if(cmd.equals("sendProc")) {
 		return new SendProcAction();
-	}
+		}else if(cmd.equals("sendLogProc")) {
+			return new SendLogProcAction();
+		}
 		return null;
 	}
 }

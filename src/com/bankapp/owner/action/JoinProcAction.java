@@ -26,6 +26,7 @@ public class JoinProcAction implements Action{
 				request.getParameter("phone").equals("")||
 				request.getParameter("phone")==null	
 				) {
+			Script.back("누락된 항목이 있습니다.", response);
 			return;
 		}
 		

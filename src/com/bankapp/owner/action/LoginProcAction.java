@@ -26,6 +26,7 @@ public class LoginProcAction implements Action{
 				request.getParameter("pwd").equals("")||
 				request.getParameter("pwd")==null		
 				) {
+			Script.back("누락된 항목이 있습니다.", response);
 			return;
 		}
 		

@@ -25,6 +25,7 @@ public class ChargeProcAction implements Action{
 				request.getParameter("amount").equals("")||
 				request.getParameter("amount")==null	
 				) {
+			Script.back("누락된 항목이 있습니다.", response);
 			return;
 		}
 		
@@ -42,6 +43,9 @@ public class ChargeProcAction implements Action{
 		if (result == 1) {
 			Account principal = accountDao.find(phone);
 			session.setAttribute("principal", principal);
+			
+			
+			
 			Script.href("충전되었습니다.", "/owner/account?cmd=home", response);
 		}else {
 			Script.back("충전이 실패했습니다.", response);

@@ -1,4 +1,4 @@
-package com.bankapp.owner.model;
+package com.bankapp.owner.dto;
 
 import java.sql.Timestamp;
 
@@ -11,12 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AccountLog {
+public class SendLogDto {
 
-	private int id;
-	private String send;
-	private String receive;
-	private int money;
-	private Timestamp logTime;
-	
+	private String receiver;
+	private int sendAmount;
+	private String sender;
+	private Timestamp createDate;
 }

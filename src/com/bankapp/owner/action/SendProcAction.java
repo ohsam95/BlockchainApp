@@ -8,8 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.bankapp.owner.dao.AccountDao;
+import com.bankapp.owner.dto.MempoolJson;
 import com.bankapp.owner.model.Account;
+import com.bankapp.owner.util.SHA256;
 import com.bankapp.owner.util.Script;
+import com.google.gson.Gson;
 
 
 
@@ -36,7 +39,23 @@ public class SendProcAction implements Action{
 		int sendAmount = Integer.parseInt(request.getParameter("sendAmount"));
 		String pwd = request.getParameter("pwd");
 		String phone = request.getParameter("phone");
+
+		// 여기까지 옴
+		//해쉬화하기
 		
+			MempoolJson mempoolJson = MempoolJson.builder()
+					.receiver(receiver)
+					.sendAmount(sendAmount)
+					.phone(phone)
+					.build();
+		System.out.println(mempoolJson.getPhone());
+		
+		Gson gson = new Gson();
+		String sendInfo = gson.toJson(mempoolJson);
+		response.setCharacterEncoding("UTF-8");
+		String hash = SHA256.encodeSha256(sendInfo);
+		System.out.println(hash);
+		System.out.println(sendInfo);
 		
 		// db연결
 		AccountDao accountDao = AccountDao.getinstance();
@@ -48,6 +67,9 @@ public class SendProcAction implements Action{
 		}else {
 			accountDao.recevie(sendAmount, receiver);
 			accountDao.send(sendAmount, phone);
+			
+			accountDao.insertMempool(receiver, sendAmount, phone,hash);
+			
 			Account principal = accountDao.find(phone);
 			session.setAttribute("principal", principal);
 			Script.href("이체가 성공했습니다.", "/owner/account?cmd=home", response);			
