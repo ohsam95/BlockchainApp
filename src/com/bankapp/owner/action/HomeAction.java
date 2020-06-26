@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 public class HomeAction implements Action{
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
 		RequestDispatcher dis = request.getRequestDispatcher("account/home.jsp");
 		dis.forward(request, response);
 		

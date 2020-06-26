@@ -22,32 +22,25 @@ import com.google.gson.Gson;
 public class SendLogProcAction implements Action{
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 유효성 검사
-//		HttpSession session = request.getSession();
-//		if
-//		(	
-//				request.getParameter("pwd").equals("")||
-//				request.getParameter("pwd")==null	
-//				) {
-//			Script.back("비밀번호를 입력해주세요.", response);
-//			return;
-//		}
+	
 		
 		//파라메터 받기
-//		String pwd = request.getParameter("pwd");
+
 		String phone = request.getParameter("phone");
 
 		
 		// db연결
 		AccountDao accountDao = AccountDao.getinstance();
-//		Account result = accountDao.pwdConfirm(pwd,phone);
-		
-		//페이지 이동//
-//		if (result==null) {
-//			Script.back("비밀번호가 틀립니다.", response);
-//		}else {
-			List<SendLogDto> sendLogDtos = accountDao.sendLog(phone);
 
+			List<SendLogDto> sendLogDtos = accountDao.sendLog(phone);
+			
+			//test
+			accountDao.sendBlockData();
+			
+//			
+//			accountDao.deleteBlockMempool();
+			
+			
 			request.setAttribute("sendLogDtos", sendLogDtos);
 			
 			Gson gson = new Gson();
@@ -57,10 +50,7 @@ public class SendLogProcAction implements Action{
 			response.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.println(sendLogDtosJson);
-
-//			Script.href("/owner/account?cmd=home#sendLog", response);
-		 
 			
 		}
 	}
-//}
+

@@ -69,6 +69,7 @@ public class SendProcAction implements Action{
 			accountDao.send(sendAmount, phone);
 			
 			accountDao.insertMempool(receiver, sendAmount, phone,hash);
+			accountDao.insertBlockMempool(receiver, sendAmount, phone, hash);
 			
 			Account principal = accountDao.find(phone);
 			session.setAttribute("principal", principal);

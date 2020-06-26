@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bankapp.owner.db.DBConn;
+import com.bankapp.owner.dto.MempoolBlock;
 import com.bankapp.owner.dto.SendLogDto;
+import com.bankapp.owner.dto.mempoolBlocksJson;
 import com.bankapp.owner.model.Account;
 import com.bankapp.owner.model.Mempool;
+import com.google.gson.Gson;
 
 
 
@@ -25,6 +28,44 @@ public class AccountDao {
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	
+	public String sendBlockData() {
+			final String SQL = "select id,receiver,sendAmount,sender,hash,createDate from blockmempool";
+			List<MempoolBlock> mempoolBlocks = new ArrayList<MempoolBlock>();
+			try {
+				conn = DBConn.getConnection();
+				pstmt = conn.prepareStatement(SQL);
+				//물음표 완성
+				rs = pstmt.executeQuery();
+				
+				while (rs.next()) {
+					MempoolBlock mempoolBlock = MempoolBlock.builder()
+							.id(rs.getInt(1))
+							.receiver(rs.getString(2))
+							.sendAmount(rs.getInt(3))
+							.sender(rs.getString(4))
+							.hash(rs.getString(5))
+							.createDate(rs.getTimestamp(6))
+							.build();
+					mempoolBlocks.add(mempoolBlock);
+				}
+				Gson gson = new Gson();
+				String mempoolBlocksJson = gson.toJson(mempoolBlocks);
+//				System.out.println(mempoolBlocksJson);
+//				memJson mem = memJson.builder()
+//						.mempoolBlocksJson(mempoolBlocksJson)
+//						.build();
+//				System.out.println(mem.getMempoolBlocksJson());
+//				
+				return mempoolBlocksJson;
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(TAG+"sendBlockData : "+e.getMessage());
+			}finally {
+				DBConn.close(conn, pstmt);
+			}
+			return null;
+		}
 	
 	public List<SendLogDto> sendLog(String phone) {
 		final String SQL = "select receiver,sendAmount,sender,createDate from mempool where sender = ? or receiver = ?";
@@ -57,7 +98,43 @@ public class AccountDao {
 			return null;
 		}
 	
+	public int deleteBlockMempool() {
+		final String SQL = "delete from blockmempool";
+			try {
+				conn = DBConn.getConnection();
+				pstmt = conn.prepareStatement(SQL);
+				//물음표 완성
+
+				return pstmt.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(TAG+"deleteBlockMempool : "+e.getMessage());
+			}finally {
+				DBConn.close(conn, pstmt);
+			}
+			return -1;
+		}
 	
+	public int insertBlockMempool (String receiver, int sendAmount, String phone,String hash) {
+		final String SQL = "insert into blockmempool(id,receiver,sendAmount,sender,hash,createDate) values(blockmempool_seq.nextval,?,?,?,?,sysdate)";
+			try {
+				conn = DBConn.getConnection();
+				pstmt = conn.prepareStatement(SQL);
+				//물음표 완성
+				pstmt.setString(1, receiver);
+				pstmt.setInt(2, sendAmount);
+				pstmt.setString(3, phone);
+				pstmt.setString(4, hash);
+				
+				return pstmt.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(TAG+"insertBlockMempool : "+e.getMessage());
+			}finally {
+				DBConn.close(conn, pstmt);
+			}
+			return -1;
+		}
 	
 	public int insertMempool (String receiver, int sendAmount, String phone,String hash) {
 		final String SQL = "insert into mempool(id,receiver,sendAmount,sender,hash,createDate) values(mempool_seq.nextval,?,?,?,?,sysdate)";

@@ -1,6 +1,7 @@
 package com.bankapp.owner.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,9 +14,9 @@ import com.bankapp.owner.action.HomeAction;
 import com.bankapp.owner.action.JoinProcAction;
 import com.bankapp.owner.action.LoginProcAction;
 import com.bankapp.owner.action.LogoutAction;
-
 import com.bankapp.owner.action.SendLogProcAction;
 import com.bankapp.owner.action.SendProcAction;
+import com.bankapp.owner.action.TestAction;
 
 
 
@@ -57,6 +58,8 @@ public class Appcontroller extends HttpServlet {
 		return new SendProcAction();
 		}else if(cmd.equals("sendLogProc")) {
 			return new SendLogProcAction();
+		}else if(cmd.equals("test")) {
+			return new TestAction();
 		}
 		return null;
 	}

@@ -48,11 +48,17 @@
 							<li><a href="#join">계좌신설</a></li>
 							<li><a href="#login">로그인</a></li>
 						</c:when>
+						<c:when test="${sessionScope.principal.phone eq '01068484033'}">
+							<li><a href="#charge">충전하기</a></li>
+							<li><a href="#send">이체하기</a></li>
+							<li><a href="#block">블록</a></li>
+						</c:when>
 						<c:otherwise>
 							<li><a href="#charge">충전하기</a></li>
 							<li><a href="#send">이체하기</a></li>
 						</c:otherwise>
 					</c:choose>
+
 
 
 				</ul>
@@ -66,19 +72,18 @@
 			<article id="sendLog">
 				<h2 class="major">모든 거래내역 보기</h2>
 				<section>
-<!-- 					<form method="post" action="/owner/account?cmd=sendLogProc"> -->
-						<div class="fields">	
-							<div class="field half">
-<!-- 								<label for="demo-name">비밀번호 확인</label> -->
-<!-- 								 <input type="password" name="pwd" id="pwd" value="" placeholder="비밀번호를 입력해주세요." /> -->
-								 <input type="hidden" name="phone" id="phone" value="${sessionScope.principal.phone}" />
-							</div>
+					<!-- 					<form method="post" action="/owner/account?cmd=sendLogProc"> -->
+					<div class="fields">
+						<div class="field half">
+							<!-- 								<label for="demo-name">비밀번호 확인</label> -->
+							<!-- 								 <input type="password" name="pwd" id="pwd" value="" placeholder="비밀번호를 입력해주세요." /> -->
+							<input type="hidden" name="phone" id="phone" value="${sessionScope.principal.phone}" />
 						</div>
-<!-- 						<input type="submit" value="거래내역 조회" class="primary" /> -->
-					<button onclick="logClick(${sessionScope.principal.phone})">거래내역 조회</button> 
-					<br/> 
-					<br/> 
-<!-- 					</form> -->
+					</div>
+					<!-- 						<input type="submit" value="거래내역 조회" class="primary" /> -->
+					<button onclick="logClick(${sessionScope.principal.phone})">거래내역 조회</button>
+					<br /> <br />
+					<!-- 					</form> -->
 					<table>
 						<thead>
 							<tr>
@@ -86,19 +91,30 @@
 								<th>금액</th>
 								<th>보내는 사람</th>
 								<th>시간</th>
-								</tr>
-								</thead>
+							</tr>
+						</thead>
 						<tbody id="table">
-<%-- 								<c:forEach var = "sendLogDto" items="${sendLogDtos}"> --%>
-<!-- 									<tr> -->
-<%-- 									<td>${sendLogDto.receiver}</td> --%>
-<%-- 									<td>${sendLogDto.sendAmount}</td> --%>
-<%-- 									<td>${sendLogDto.sender}</td> --%>
-<%-- 									<td>${sendLogDto.createDate}</td> --%>
-<!-- 									</tr> -->
-<%-- 								</c:forEach> --%>
+							<%-- 								<c:forEach var = "sendLogDto" items="${sendLogDtos}"> --%>
+							<!-- 									<tr> -->
+							<%-- 									<td>${sendLogDto.receiver}</td> --%>
+							<%-- 									<td>${sendLogDto.sendAmount}</td> --%>
+							<%-- 									<td>${sendLogDto.sender}</td> --%>
+							<%-- 									<td>${sendLogDto.createDate}</td> --%>
+							<!-- 									</tr> -->
+							<%-- 								</c:forEach> --%>
 						</tbody>
 					</table>
+				</section>
+			</article>
+
+			<article id="block">
+				<h2 class="major">블록체인</h2>
+				<section>
+					<h3 class="major">시작하기</h3>
+					<form>
+						<!-- 송신 메시지를 작성하는 텍스트 박스 -->
+						<input onclick="StartBlock()" value="블록의 data 보내기" type="button">
+					</form>
 				</section>
 			</article>
 
@@ -185,7 +201,7 @@
 
 		</div>
 
-<script>
+		<script>
 
 
 function logClick(phone){
@@ -212,6 +228,51 @@ function logClick(phone){
 		alert("에러야")
 	});
 }
+
+function takeJson(){
+	$.ajax({
+		type:"post",
+		url:"/owner/account?cmd=test",
+		dataType:"json"		
+	}).done(function(result){
+		console.log("데이터 가져왔음");
+		console.log(result);		
+		var dataJson = JSON.stringify(result);
+		webSocket.send(dataJson);
+	}).fail(function(error) {
+		alert("에러야 왜!!!!!!!")
+	});
+}
+
+// 첫 블록을 만들고가야하나 고민중
+// function takeFirstBlock(){
+// 	$.ajax({
+// 		type:"post",
+// 		url:"/owner/account?cmd=block",
+// 		dataType:"text"		
+// 	}).done(function(result){
+// 		console.log("데이터 가져왔음");
+// 		console.log(result);		
+// 		var dataJson = JSON.stringify(result);
+// 		webSocket.send(dataJson);
+// 	}).fail(function(error) {
+// 		alert("에러야 왜!!!!!!!")
+// 	});
+// }
+
+var webSocket = new WebSocket("ws://localhost:8001/node1/websocket");
+//콘솔 텍스트 에리어 오브젝트
+
+
+
+
+function StartBlock() {
+	takeJson();
+	setInterval(takeJson,5000);
+	
+}
+
+
 </script>
 
 		<%@include file="/include/footer.jsp"%>
