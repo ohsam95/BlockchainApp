@@ -26,13 +26,15 @@ public class TestAction implements Action{
 		System.out.println(data);
 		
 		
-//		블록을 만드는 db를 삭제
-//		accountDao.deleteBlockMempool();
+
 		
 		request.setAttribute("data", data);
 		
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(data);
+		
+//		블록을 만드는 db를 삭제 - 테스트 완료하고 삭제해주는 메서드 넣어야함!
+//		accountDao.deleteBlockMempool();
 	}
 }

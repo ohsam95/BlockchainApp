@@ -229,6 +229,26 @@ function logClick(phone){
 	});
 }
 
+var node1Socket = new WebSocket("ws://localhost:8001/node1/websocket");
+var node2Socket = new WebSocket("ws://localhost:8001/node2/websocket");
+var node3Socket = new WebSocket("ws://localhost:8001/node3/websocket");
+
+node1Socket.onmessage = function(e){
+	onMessage(e);
+};
+node2Socket.onmessage = function(e){
+	onMessage(e);
+};
+node3Socket.onmessage = function(e){
+	onMessage(e);
+};
+
+
+function onMessage(e){
+	console.log(e);
+	
+}
+
 function takeJson(){
 	$.ajax({
 		type:"post",
@@ -238,37 +258,22 @@ function takeJson(){
 		console.log("데이터 가져왔음");
 		console.log(result);		
 		var dataJson = JSON.stringify(result);
-		webSocket.send(dataJson);
+		node1Socket.send(dataJson);
+		node2Socket.send(dataJson);
+		node3Socket.send(dataJson);
 	}).fail(function(error) {
-		alert("에러야 왜!!!!!!!")
+		alert("블록체인 종료")
 	});
 }
+// 
 
-// 첫 블록을 만들고가야하나 고민중
-// function takeFirstBlock(){
-// 	$.ajax({
-// 		type:"post",
-// 		url:"/owner/account?cmd=block",
-// 		dataType:"text"		
-// 	}).done(function(result){
-// 		console.log("데이터 가져왔음");
-// 		console.log(result);		
-// 		var dataJson = JSON.stringify(result);
-// 		webSocket.send(dataJson);
-// 	}).fail(function(error) {
-// 		alert("에러야 왜!!!!!!!")
-// 	});
-// }
-
-var webSocket = new WebSocket("ws://localhost:8001/node1/websocket");
-//콘솔 텍스트 에리어 오브젝트
 
 
 
 
 function StartBlock() {
 	takeJson();
-	setInterval(takeJson,5000);
+	setInterval(takeJson,10000);
 	
 }
 
