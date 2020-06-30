@@ -28,6 +28,30 @@ public class AccountDao {
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	
+	public int insertBlockList (String hash, String previousHash, String data,String timestamp,int nonce,int nodeNumber) {
+		final String SQL = "insert into blocklist(id,hash,previoushash,data,timestamp,nonce,nodeNum) values(blocklist_seq.nextval,?,?,?,?,?,?)";
+			try {
+				conn = DBConn.getConnection();
+				pstmt = conn.prepareStatement(SQL);
+				//물음표 완성
+				pstmt.setString(1, hash);
+				pstmt.setString(2, previousHash);
+				pstmt.setString(3, data);
+				pstmt.setString(4, timestamp);
+				pstmt.setInt(5, nonce);
+				pstmt.setInt(6, nodeNumber);
+				
+				return pstmt.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(TAG+"insertBlockMempool : "+e.getMessage());
+			}finally {
+				DBConn.close(conn, pstmt);
+			}
+			return -1;
+		}
+	
+	
 	public String sendBlockData() {
 			final String SQL = "select id,receiver,sendAmount,sender,hash,createDate from blockmempool";
 			List<MempoolBlock> mempoolBlocks = new ArrayList<MempoolBlock>();
@@ -68,7 +92,7 @@ public class AccountDao {
 		}
 	
 	public List<SendLogDto> sendLog(String phone) {
-		final String SQL = "select receiver,sendAmount,sender,createDate from mempool where sender = ? or receiver = ?";
+		final String SQL = "select receiver,sendAmount,sender,createDate from mempool where sender = ? or receiver = ? order by id desc";
 			List<SendLogDto> sendLogDtos = new ArrayList<SendLogDto>();
 			try {
 				conn = DBConn.getConnection();

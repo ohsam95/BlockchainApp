@@ -33,8 +33,10 @@ public class TestAction implements Action{
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(data);
+
 		
-//		블록을 만드는 db를 삭제 - 테스트 완료하고 삭제해주는 메서드 넣어야함!
-//		accountDao.deleteBlockMempool();
+		
+//		블록에 보낼 10분간의 데이터를 만든 db를 삭제 - 테스트 완료하고 삭제해주는 메서드 넣어야함!
+		accountDao.deleteBlockMempool();
 	}
 }

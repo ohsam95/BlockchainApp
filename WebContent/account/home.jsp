@@ -256,10 +256,17 @@ function onMessage(e){
 	
 	if (nodeCount == count){
 	 	count = count+1;
-			
-		blockchain.push(e.data);
+		//블록체인에 값 넣기
+	 	blockchain.push(e.data);
+		//이전해쉬에 해쉬 넣기
 	 	prvHash = JSON.parse(e.data).hash;
-	 	console.log(prvHash);	
+		// 블록을 데이터베이스에 저장하기
+		var nodePreviousHash = JSON.parse(e.data).previousHash;
+		var nodeData = JSON.parse(e.data).data;
+		var nodeTimestamp = JSON.parse(e.data).timestamp;
+		var nodeNonce = JSON.parse(e.data).nonce;
+		var nodeNumber = JSON.parse(e.data).nodeNum;
+			ResultBlock(prvHash,nodePreviousHash,nodeData,nodeTimestamp,nodeNonce,nodeNumber);
 	 	
 	}else{
 		failCount++;
@@ -278,6 +285,7 @@ function takeJson(){
 		dataType:"json"		
 	}).done(function(result){
 		console.log("데이터 가져왔음");
+		console.log(result);
 		if (!blockchain[0]) {
 			
 			var dataJson =
@@ -310,8 +318,29 @@ function takeJson(){
 function StartBlock() {
 	takeJson();
 	setInterval(takeJson,10000);
+}
+
+function ResultBlock(prvHash,nodePreviousHash,nodeData,nodeTimestamp,nodeNonce,nodeNumber){
+	$.ajax({
+		type:"post",
+		url:"/owner/account?cmd=result",
+			data: {
+				prvHash,
+				nodePreviousHash,
+				nodeData,
+				nodeTimestamp,
+				nodeNonce,
+				nodeNumber
+			},
+		dataType:"text"		
+	}).done(function(result){
+		console.log("채굴 경쟁 끝")
+	}).fail(function(error) {
+		console.log("오류")
+	});
 	
 }
+
 </script>
 
 		<%@include file="/include/footer.jsp"%>
