@@ -228,6 +228,7 @@ function logClick(phone){
 		alert("에러야")
 	});
 }
+var blockchain = new Array();
 
 var node1Socket = new WebSocket("ws://localhost:8001/node1/websocket");
 var node2Socket = new WebSocket("ws://localhost:8001/node2/websocket");
@@ -235,7 +236,10 @@ var node3Socket = new WebSocket("ws://localhost:8001/node3/websocket");
 
 node1Socket.onmessage = function(e){
 	onMessage(e);
-};
+};								
+
+//내일 해볼것 - 서버에 블록체인 리스트를 만들고 노드의 블체리스트 없애기
+					// 또 해볼 것 - 연결을 끊고 다시 연결하는 작업을 여기에 적기
 node2Socket.onmessage = function(e){
 	onMessage(e);
 };
@@ -243,10 +247,28 @@ node3Socket.onmessage = function(e){
 	onMessage(e);
 };
 
+var prvHash = '0'; //나중에 한번 봅시다
 
+var count = 0;
+var failCount = 0;
 function onMessage(e){
-	console.log(e);
+	var nodeCount = JSON.parse(e.data).count;
 	
+	if (nodeCount == count){
+	 	count = count+1;
+			
+		blockchain.push(e.data);
+	 	prvHash = JSON.parse(e.data).hash;
+	 	console.log(prvHash);	
+	 	
+	}else{
+		failCount++;
+		if(failCount == 2){
+			count = 0;
+			failCount = 0;
+		}
+	}	
+	 	console.log(blockchain);
 }
 
 function takeJson(){
@@ -256,28 +278,40 @@ function takeJson(){
 		dataType:"json"		
 	}).done(function(result){
 		console.log("데이터 가져왔음");
-		console.log(result);		
-		var dataJson = JSON.stringify(result);
-		node1Socket.send(dataJson);
-		node2Socket.send(dataJson);
-		node3Socket.send(dataJson);
+		if (!blockchain[0]) {
+			
+			var dataJson =
+			{
+				"prvHash" : 0,
+				"dataJson" : result
+			}
+			var dataJsonDto = JSON.stringify(dataJson);
+			node1Socket.send(dataJsonDto);
+			node2Socket.send(dataJsonDto);
+			node3Socket.send(dataJsonDto);
+	
+		}else{
+			var dataJson =
+			{
+				"prvHash" : prvHash,
+				"dataJson" : result
+			}
+			var dataJsonDto = JSON.stringify(dataJson);
+			node1Socket.send(dataJsonDto);
+			node2Socket.send(dataJsonDto);
+			node3Socket.send(dataJsonDto);
+		}
 	}).fail(function(error) {
 		alert("블록체인 종료")
 	});
 }
-// 
-
-
-
-
+ 
 
 function StartBlock() {
 	takeJson();
 	setInterval(takeJson,10000);
 	
 }
-
-
 </script>
 
 		<%@include file="/include/footer.jsp"%>
