@@ -293,8 +293,8 @@ function takeJson(){
 
 function StartBlock() {
 	takeJson();
-	//노드에게 데이터 전송 반복하기
-	setInterval(takeJson,10000);
+	//노드에게 데이터 전송 반복하기 - 시간 설정 가능 (600000은 10분)
+	setInterval(takeJson,600000);
 }
 
 //결과를 받는 ajax
