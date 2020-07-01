@@ -74,19 +74,14 @@ public class AccountDao {
 				}
 				Gson gson = new Gson();
 				String mempoolBlocksJson = gson.toJson(mempoolBlocks);
-//				System.out.println(mempoolBlocksJson);
-//				memJson mem = memJson.builder()
-//						.mempoolBlocksJson(mempoolBlocksJson)
-//						.build();
-//				System.out.println(mem.getMempoolBlocksJson());
-//				
+				
 				return mempoolBlocksJson;
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println(TAG+"sendBlockData : "+e.getMessage());
 			}finally {
-				DBConn.close(conn, pstmt);
+				DBConn.close(conn, pstmt,rs);
 			}
 			return null;
 		}
@@ -117,7 +112,7 @@ public class AccountDao {
 				e.printStackTrace();
 				System.out.println(TAG+"sendLog : "+e.getMessage());
 			}finally {
-				DBConn.close(conn, pstmt);
+				DBConn.close(conn, pstmt,rs);
 			}
 			return null;
 		}
@@ -294,7 +289,7 @@ public class AccountDao {
 				e.printStackTrace();
 				System.out.println(TAG+"login : "+e.getMessage());
 			}finally {
-				DBConn.close(conn, pstmt);
+				DBConn.close(conn, pstmt,rs);
 			}
 			return null;
 		}

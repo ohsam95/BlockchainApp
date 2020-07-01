@@ -5,7 +5,7 @@
 
 <html>
 <head>
-<title>계좌이체 앱</title>
+<title>블록체인 지갑 APP</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 <link rel="stylesheet" href="/owner/assets/css/main.css" />
@@ -16,33 +16,34 @@
 	<!-- Wrapper -->
 	<div id="wrapper">
 
-		<!-- Header -->
+		<!-- 헤더 -->
 		<header id="header">
 			<div class="logo">
 				<span class="icon fa-gem"></span>
 			</div>
 			<div class="content">
 				<div class="inner">
-					<h1>블록체인</h1>
+					<h1>블록체인 지갑</h1>
 					<c:choose>
 						<c:when test="${empty sessionScope.principal}">
 							<p>
-								휴대폰 번호로 계좌를 만들고 이체를 할 수 있는 블록체인 기반의 서비스입니다.<br /> 신규 고객은 <a href="#join">여기를 눌러 계좌를 신설해주세요</a> <br /> 기존 고객들은 계좌에 <a href="#login">로그인</a>하여주십시오.
+								휴대폰 번호로 계좌를 만들고 이체를 할 수 있는 블록체인 기반의 서비스입니다.<br /> 블록체인으로 거래데이터를 암호화하여 안전한 금융 생활을 지원합니다. <br />
+								<br /> 신규 고객은 <a href="#join">여기를</a> 눌러 계좌를 신설해주세요 <br /> 기존 고객들은 계좌에 <a href="#login">로그인</a>하여주십시오.
 							</p>
 						</c:when>
 						<c:otherwise>
 							<p>
-								안녕하세요 ${sessionScope.principal.name}님! <br /> 고객님의 잔액은 ${sessionScope.principal.amount}원입니다.<br /> 로그아웃을 원하시면 <a href="/owner/account?cmd=logout">여기를</a> 누르세요.<br /> 거래내역을 보려면 <a
+								안녕하세요 ${sessionScope.principal.name}님! <br /> 고객님의 잔액은 ${sessionScope.principal.amount}원입니다.<br /><br /> 로그아웃을 원하시면 <a href="/owner/account?cmd=logout">여기를</a> 누르세요.<br /> 거래내역을 보려면 <a
 									href="#sendLog">여기를</a> 누르세요.
 							</p>
 						</c:otherwise>
 					</c:choose>
 
-					<!-- 세션이 있으면 잔액 -->
 				</div>
 			</div>
 			<nav>
 				<ul>
+					<!-- 관리자 페이지, 로그인 전 페이지, 로그인 후 페이지 분류 -->
 					<c:choose>
 						<c:when test="${empty sessionScope.principal}">
 							<li><a href="#join">계좌신설</a></li>
@@ -72,18 +73,13 @@
 			<article id="sendLog">
 				<h2 class="major">모든 거래내역 보기</h2>
 				<section>
-					<!-- 					<form method="post" action="/owner/account?cmd=sendLogProc"> -->
 					<div class="fields">
 						<div class="field half">
-							<!-- 								<label for="demo-name">비밀번호 확인</label> -->
-							<!-- 								 <input type="password" name="pwd" id="pwd" value="" placeholder="비밀번호를 입력해주세요." /> -->
 							<input type="hidden" name="phone" id="phone" value="${sessionScope.principal.phone}" />
 						</div>
 					</div>
-					<!-- 						<input type="submit" value="거래내역 조회" class="primary" /> -->
 					<button onclick="logClick(${sessionScope.principal.phone})">거래내역 조회</button>
 					<br /> <br />
-					<!-- 					</form> -->
 					<table>
 						<thead>
 							<tr>
@@ -94,26 +90,19 @@
 							</tr>
 						</thead>
 						<tbody id="table">
-							<%-- 								<c:forEach var = "sendLogDto" items="${sendLogDtos}"> --%>
-							<!-- 									<tr> -->
-							<%-- 									<td>${sendLogDto.receiver}</td> --%>
-							<%-- 									<td>${sendLogDto.sendAmount}</td> --%>
-							<%-- 									<td>${sendLogDto.sender}</td> --%>
-							<%-- 									<td>${sendLogDto.createDate}</td> --%>
-							<!-- 									</tr> -->
-							<%-- 								</c:forEach> --%>
+
 						</tbody>
 					</table>
 				</section>
 			</article>
 
 			<article id="block">
-				<h2 class="major">블록체인</h2>
+				<h2 class="major">블록체인 - 관리자 전용</h2>
+				<br/>
 				<section>
-					<h3 class="major">시작하기</h3>
+					<h3 class="major">버튼을 누르면 블록체인이 생성됩니다.</h3>
 					<form>
-						<!-- 송신 메시지를 작성하는 텍스트 박스 -->
-						<input onclick="StartBlock()" value="블록의 data 보내기" type="button">
+						<input onclick="StartBlock()" value="BlockChain Start" type="button">
 					</form>
 				</section>
 			</article>
@@ -203,9 +192,8 @@
 
 		<script>
 
-
+//거래내역 보기 위한 ajax
 function logClick(phone){
-// 	var pwd = $("#pwd").val();
  		var phone = $("#phone").val();
 	$.ajax({
 		type:"post",
@@ -219,17 +207,18 @@ function logClick(phone){
 				"			        <td>"+sendLogDto.receiver+"</td>\r\n" + 
 				"			        <td>"+sendLogDto.sendAmount+"</td>\r\n" +  
 				"			        <td>"+sendLogDto.sender+"</td>\r\n" +  
-				"			        <td>"+sendLogDto.creatdate+"</td>\r\n" +  
+				"			        <td>"+sendLogDto.createDate+"</td>\r\n" +  
 				"			      </tr>";
 				
 				$("#table").append(string);
 		}
 	}).fail(function(error) {
-		alert("에러야")
+		alert("에러입니다.")
 	});
 }
 var blockchain = new Array();
 
+//노드와 웹소켓 연결
 var node1Socket = new WebSocket("ws://localhost:8001/node1/websocket");
 var node2Socket = new WebSocket("ws://localhost:8001/node2/websocket");
 var node3Socket = new WebSocket("ws://localhost:8001/node3/websocket");
@@ -237,9 +226,6 @@ var node3Socket = new WebSocket("ws://localhost:8001/node3/websocket");
 node1Socket.onmessage = function(e){
 	onMessage(e);
 };								
-
-//내일 해볼것 - 서버에 블록체인 리스트를 만들고 노드의 블체리스트 없애기
-					// 또 해볼 것 - 연결을 끊고 다시 연결하는 작업을 여기에 적기
 node2Socket.onmessage = function(e){
 	onMessage(e);
 };
@@ -247,10 +233,10 @@ node3Socket.onmessage = function(e){
 	onMessage(e);
 };
 
-var prvHash = '0'; //나중에 한번 봅시다
-
+var prvHash = 0;
 var count = 0;
 var failCount = 0;
+//노드에서 메시지가 오면 실행
 function onMessage(e){
 	var nodeCount = JSON.parse(e.data).count;
 	
@@ -260,7 +246,7 @@ function onMessage(e){
 	 	blockchain.push(e.data);
 		//이전해쉬에 해쉬 넣기
 	 	prvHash = JSON.parse(e.data).hash;
-		// 블록을 데이터베이스에 저장하기
+		// 블록을 데이터베이스에 저장하기위해 ajax 실행
 		var nodePreviousHash = JSON.parse(e.data).previousHash;
 		var nodeData = JSON.parse(e.data).data;
 		var nodeTimestamp = JSON.parse(e.data).timestamp;
@@ -270,6 +256,7 @@ function onMessage(e){
 	 	
 	}else{
 		failCount++;
+		//노드 경쟁을 위해 첫 채굴한 노드만 들어오게 만드는 알고리즘
 		if(failCount == 2){
 			count = 0;
 			failCount = 0;
@@ -281,34 +268,23 @@ function onMessage(e){
 function takeJson(){
 	$.ajax({
 		type:"post",
-		url:"/owner/account?cmd=test",
+		url:"/owner/account?cmd=start",
 		dataType:"json"		
 	}).done(function(result){
-		console.log("데이터 가져왔음");
-		console.log(result);
-		if (!blockchain[0]) {
-			
-			var dataJson =
-			{
-				"prvHash" : 0,
-				"dataJson" : result
-			}
-			var dataJsonDto = JSON.stringify(dataJson);
-			node1Socket.send(dataJsonDto);
-			node2Socket.send(dataJsonDto);
-			node3Socket.send(dataJsonDto);
-	
-		}else{
+		//노드로 보낼 데이터 - 난이도 설정 할 수 있음!! (지금은 해쉬가 앞에서 5글자가 0인걸 찾는 난이도)
 			var dataJson =
 			{
 				"prvHash" : prvHash,
-				"dataJson" : result
+				"dataJson" : result,
+				"difficulty" : 5
 			}
+			//제이슨화
 			var dataJsonDto = JSON.stringify(dataJson);
+			// 노드로 send
 			node1Socket.send(dataJsonDto);
 			node2Socket.send(dataJsonDto);
 			node3Socket.send(dataJsonDto);
-		}
+
 	}).fail(function(error) {
 		alert("블록체인 종료")
 	});
@@ -317,9 +293,11 @@ function takeJson(){
 
 function StartBlock() {
 	takeJson();
+	//노드에게 데이터 전송 반복하기
 	setInterval(takeJson,10000);
 }
 
+//결과를 받는 ajax
 function ResultBlock(prvHash,nodePreviousHash,nodeData,nodeTimestamp,nodeNonce,nodeNumber){
 	$.ajax({
 		type:"post",
@@ -343,4 +321,24 @@ function ResultBlock(prvHash,nodePreviousHash,nodeData,nodeTimestamp,nodeNonce,n
 
 </script>
 
-		<%@include file="/include/footer.jsp"%>
+		<!-- Footer -->
+		<footer id="footer">
+			<p class="copyright">
+				&copy; 제작자 : 이동현.
+			</p>
+		</footer>
+
+	</div>
+
+	<!-- BG -->
+	<div id="bg"></div>
+
+	<!-- Scripts -->
+	<script src="/owner/assets/js/jquery.min.js"></script>
+	<script src="/owner/assets/js/browser.min.js"></script>
+	<script src="/owner/assets/js/breakpoints.min.js"></script>
+	<script src="/owner/assets/js/util.js"></script>
+	<script src="/owner/assets/js/main.js"></script>
+
+</body>
+</html>

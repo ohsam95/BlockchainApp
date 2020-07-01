@@ -34,13 +34,6 @@ public class SendLogProcAction implements Action{
 
 			List<SendLogDto> sendLogDtos = accountDao.sendLog(phone);
 			
-			//test
-			accountDao.sendBlockData();
-			
-//			
-//			accountDao.deleteBlockMempool();
-			
-			
 			request.setAttribute("sendLogDtos", sendLogDtos);
 			
 			Gson gson = new Gson();

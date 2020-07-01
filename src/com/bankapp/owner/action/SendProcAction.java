@@ -40,9 +40,7 @@ public class SendProcAction implements Action{
 		String pwd = request.getParameter("pwd");
 		String phone = request.getParameter("phone");
 
-		// 여기까지 옴
-		//해쉬화하기
-		
+		//해쉬화하기		
 			MempoolJson mempoolJson = MempoolJson.builder()
 					.receiver(receiver)
 					.sendAmount(sendAmount)

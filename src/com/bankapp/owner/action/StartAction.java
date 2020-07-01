@@ -12,21 +12,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.bankapp.owner.dao.AccountDao;
 
-public class TestAction implements Action{
+public class StartAction implements Action{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		AccountDao accountDao = AccountDao.getinstance();
 		String data = accountDao.sendBlockData();
-		//소켓통신으로 data를 노드로 보내야함
-		// 그 후 노드는 블록을 만들고 넌스를 올리며 해쉬값을 찾음
-		//해쉬값을 찾으면 블록체인에 넣고 이전해쉬를 활용해 새로운 블록을 만듬
-		//또 해쉬를 찾는 작업 -> 찾으면 블록체인에 넣고 또 그 해쉬를 가지고 블록 생성
-		System.out.println(data);
-		
-		
 
+		System.out.println(data);
 		
 		request.setAttribute("data", data);
 		
@@ -36,7 +30,7 @@ public class TestAction implements Action{
 
 		
 		
-//		블록에 보낼 10분간의 데이터를 만든 db를 삭제 - 테스트 완료하고 삭제해주는 메서드 넣어야함!
+//		블록에 보낼 10분간의 데이터를 만든 db를 삭제
 		accountDao.deleteBlockMempool();
 	}
 }

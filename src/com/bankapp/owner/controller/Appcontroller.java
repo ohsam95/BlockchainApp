@@ -17,7 +17,7 @@ import com.bankapp.owner.action.LogoutAction;
 import com.bankapp.owner.action.ResultAction;
 import com.bankapp.owner.action.SendLogProcAction;
 import com.bankapp.owner.action.SendProcAction;
-import com.bankapp.owner.action.TestAction;
+import com.bankapp.owner.action.StartAction;
 
 
 
@@ -59,8 +59,8 @@ public class Appcontroller extends HttpServlet {
 		return new SendProcAction();
 		}else if(cmd.equals("sendLogProc")) {
 			return new SendLogProcAction();
-		}else if(cmd.equals("test")) {
-			return new TestAction();
+		}else if(cmd.equals("start")) {
+			return new StartAction();
 		}else if(cmd.equals("result")) {
 			return new ResultAction();
 		}
