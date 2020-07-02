@@ -27,6 +27,28 @@ public class AccountDao {
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	
+	public int findbyphone(String phone) {
+		final String SQL = "select count(*) from account where phone = ?";
+		
+		try {
+		conn = DBConn.getConnection();
+		pstmt = conn.prepareStatement(SQL);
+		pstmt.setString(1, phone);
+		//물음표 완성하기
+		rs=pstmt.executeQuery();
+		if (rs.next()) {
+				return rs.getInt(1);
+		}
+		} catch(Exception e) {
+			e.printStackTrace();
+			System.out.println(TAG+"findbyphone : "+e.getMessage());
+		}finally {
+			DBConn.close(conn, pstmt);
+		}
+		return -1;
+	}
+	
+	
 	public CheckSend checkPhone(String receiver) {
 		final String SQL = "select phone from account where phone = ?";
 		CheckSend checkSend = null;

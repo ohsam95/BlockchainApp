@@ -23,8 +23,8 @@ public class JoinProcAction implements Action{
 				request.getParameter("name")==null||	
 				request.getParameter("pwd").equals("")||
 				request.getParameter("pwd")==null||		
-				request.getParameter("phone").equals("")||
-				request.getParameter("phone")==null	
+				request.getParameter("joinPhone").equals("")||
+				request.getParameter("joinPhone")==null	
 				) {
 			Script.back("누락된 항목이 있습니다.", response);
 			return;
@@ -33,7 +33,7 @@ public class JoinProcAction implements Action{
 		//파라메터 받기
 		String name = request.getParameter("name");
 		String pwd = request.getParameter("pwd");
-		String phone = request.getParameter("phone");
+		String phone = request.getParameter("joinPhone");
 		
 		//오브젝트 변환
 		Account account = Account.builder()

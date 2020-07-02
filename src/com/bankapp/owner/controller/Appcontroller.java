@@ -18,6 +18,7 @@ import com.bankapp.owner.action.ResultAction;
 import com.bankapp.owner.action.SendLogProcAction;
 import com.bankapp.owner.action.SendProcAction;
 import com.bankapp.owner.action.StartAction;
+import com.bankapp.owner.action.phoneCheckAction;
 
 
 
@@ -63,6 +64,8 @@ public class Appcontroller extends HttpServlet {
 			return new StartAction();
 		}else if(cmd.equals("result")) {
 			return new ResultAction();
+		}else if(cmd.equals("phoneCheck")) {
+			return new phoneCheckAction();
 		}
 		return null;
 	}

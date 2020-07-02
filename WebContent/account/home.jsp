@@ -114,18 +114,19 @@
 				<h2 class="major">계좌신설</h2>
 				<section>
 					<h3 class="major">정보를 입력해주세요</h3>
-					<form method="post" action="/owner/account?cmd=joinProc">
+					<form method="post" action="/owner/account?cmd=joinProc" onsubmit="return validate()">
 						<div class="fields">
 							<div class="field half">
-								<label for="demo-name">Name</label> <input type="text" name="name" id="name" value="" placeholder="이름을 입력해주세요." />
+								<label for="demo-name">Name</label> <input type="text" name="name" id="name" placeholder="이름을 입력해주세요." />
 							</div>
 							<div class="field half">
-								<label for="demo-email">pwd</label> <input type="password" name="pwd" id="pwd" value="" placeholder="비밀번호를 입력해주세요." />
+								<label for="demo-email">pwd</label> <input type="password" name="pwd" id="pwd" placeholder="비밀번호를 입력해주세요." />
 							</div>
 							<div class="field half">
-								<label for="demo-email">phone</label> <input type="text" name="phone" id="phone" value="" placeholder="휴대폰 번호를 입력해주세요." />
+								<label for="demo-email">phone</label> <input type="text" name="joinPhone" id="joinPhone" placeholder="휴대폰 번호를 입력해주세요." required />
+								<button type= "button" onclick="phoneCheck()">중복확인</button>
 							</div>
-
+	
 						</div>
 						<input type="submit" value="계좌 개설 완료" class="primary" />
 
@@ -191,7 +192,39 @@
 		</div>
 
 		<script>
-
+		
+		//계좌 개설시 중복체크
+		var isPhoneCheck =false;
+		
+		function validate() {
+			if(!isPhoneCheck){
+					alert('휴대폰 번호를 중복체크를 해주세요');
+				}
+			return isPhoneCheck;
+		}
+	
+		function phoneCheck(){
+			var phone = $("#joinPhone").val();
+			console.log(phone);
+			$.ajax({
+					type: "post",
+					url: "/owner/account?cmd=phoneCheck&phone="+phone,
+				}).done(function(result){
+						if(result ==1){
+							alert('전화번호가 중복되었습니다.')
+						}else if(result == 0){
+							alert('사용 가능한 전화번호입니다.')
+							isPhoneCheck = true;
+						}else {
+							console.log('서버오류')
+							}
+					}).fail(function(error){
+							console.log(error);
+						});
+	}
+		
+		
+		
 //거래내역 보기 위한 ajax
 function logClick(phone){
  		var phone = $("#phone").val();
@@ -277,7 +310,7 @@ function takeJson(){
 			{
 				"prvHash" : prvHash,
 				"dataJson" : result,
-				"difficulty" : 2
+				"difficulty" : 1
 			}
 			//제이슨화
 			var dataJsonDto = JSON.stringify(dataJson);
@@ -319,6 +352,7 @@ function ResultBlock(prvHash,nodePreviousHash,nodeData,nodeTimestamp,nodeNonce,n
 	});
 	
 }
+		
 
 </script>
 
