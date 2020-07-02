@@ -6,7 +6,11 @@
 2. 잔액 충전 기능
 3. 계좌 이체 기능
 4. 거래 내역 보기
-5. 블록체인 기능 - 서버에서 노드로 데이터를 만든다 -> 노드는 블록화시켜서 서버단으로 보낸다 -> 서버는 블록을 db에 저장 (서버는 해쉬경쟁에서 이긴 노드에게 코인을 준다)
+5. 블록체인 기능
+ 5-1. 서버에서 10분간의 거래데이터를 노드로 보낸다 (보내고 삭제 - 거래내역의 테이블과는 다른 테이블)
+ 5-2. 노드는 정보들을 블록화시켜서 서버단으로 보낸다 
+ 5-3. 서버는 가장 먼저 온 블록을 db에 저장 
+ 5-4. 서버는 해쉬경쟁에서 이긴 노드에게 코인을 준다
 
 ```sql
 CREATE TABLE ACCOUNT 
@@ -260,4 +264,3 @@ CREATE SEQUENCE BLOCKLIST_SEQ INCREMENT BY 1 MAXVALUE 99999999999999999999999999
 CREATE SEQUENCE BLOCKMEMPOOL_SEQ INCREMENT BY 1 MAXVALUE 9999999999999999999999999999 MINVALUE 1 CACHE 20;
 CREATE SEQUENCE MEMPOOL_SEQ INCREMENT BY 1 MAXVALUE 9999999999999999999999999999 MINVALUE 1 CACHE 20;
 ```
-
