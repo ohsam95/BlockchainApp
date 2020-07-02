@@ -272,11 +272,12 @@ function takeJson(){
 		dataType:"json"		
 	}).done(function(result){
 		//노드로 보낼 데이터 - 난이도 설정 할 수 있음!! (지금은 해쉬가 앞에서 5글자가 0인걸 찾는 난이도)
+		// 테스트를 위해 난이도 2 설정
 			var dataJson =
 			{
 				"prvHash" : prvHash,
 				"dataJson" : result,
-				"difficulty" : 5
+				"difficulty" : 2
 			}
 			//제이슨화
 			var dataJsonDto = JSON.stringify(dataJson);
@@ -294,7 +295,7 @@ function takeJson(){
 function StartBlock() {
 	takeJson();
 	//노드에게 데이터 전송 반복하기 - 시간 설정 가능 (600000은 10분)
-	setInterval(takeJson,600000);
+	setInterval(takeJson,10000);
 }
 
 //결과를 받는 ajax

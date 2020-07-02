@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import com.bankapp.owner.dao.AccountDao;
 import com.bankapp.owner.dto.MempoolJson;
 import com.bankapp.owner.model.Account;
+import com.bankapp.owner.model.CheckSend;
 import com.bankapp.owner.util.SHA256;
 import com.bankapp.owner.util.Script;
 import com.google.gson.Gson;
@@ -33,45 +34,49 @@ public class SendProcAction implements Action{
 			Script.back("누락된 항목이 있습니다.", response);
 			return;
 		}
-		
+
 		//파라메터 받기
 		String receiver = request.getParameter("receiver");
 		int sendAmount = Integer.parseInt(request.getParameter("sendAmount"));
 		String pwd = request.getParameter("pwd");
 		String phone = request.getParameter("phone");
 
-		//해쉬화하기		
+		//이체 내역의 보안을 위해 해쉬화하기		
 			MempoolJson mempoolJson = MempoolJson.builder()
 					.receiver(receiver)
 					.sendAmount(sendAmount)
 					.phone(phone)
 					.build();
-		System.out.println(mempoolJson.getPhone());
-		
 		Gson gson = new Gson();
 		String sendInfo = gson.toJson(mempoolJson);
 		response.setCharacterEncoding("UTF-8");
 		String hash = SHA256.encodeSha256(sendInfo);
-		System.out.println(hash);
-		System.out.println(sendInfo);
+		
 		
 		// db연결
 		AccountDao accountDao = AccountDao.getinstance();
+		CheckSend check = accountDao.checkPhone(receiver);
 		Account result = accountDao.pwdConfirm(pwd,phone);
 		
-		//페이지 이동//
-		if (result==null) {
-			Script.back("비밀번호가 틀립니다.", response);
+		
+		if (check==null) {
+			Script.back("없는 계좌번호 입니다. 다시 한번 확인 부탁드립니다.", response);
 		}else {
-			accountDao.recevie(sendAmount, receiver);
-			accountDao.send(sendAmount, phone);
-			
-			accountDao.insertMempool(receiver, sendAmount, phone,hash);
-			accountDao.insertBlockMempool(receiver, sendAmount, phone, hash);
-			
-			Account principal = accountDao.find(phone);
-			session.setAttribute("principal", principal);
-			Script.href("이체가 성공했습니다.", "/owner/account?cmd=home", response);			
+			//페이지 이동//
+			if (result==null) {
+				Script.back("비밀번호가 틀립니다.", response);
+			}else {
+				accountDao.recevie(sendAmount, receiver);
+				accountDao.send(sendAmount, phone);
+				
+				accountDao.insertMempool(receiver, sendAmount, phone,hash);
+				accountDao.insertBlockMempool(receiver, sendAmount, phone, hash);
+				
+				Account principal = accountDao.find(phone);
+				session.setAttribute("principal", principal);
+				Script.href("이체가 성공했습니다.", "/owner/account?cmd=home", response);			
+			}
 		}
+		
 	}
 }

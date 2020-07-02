@@ -9,9 +9,8 @@ import java.util.List;
 import com.bankapp.owner.db.DBConn;
 import com.bankapp.owner.dto.MempoolBlock;
 import com.bankapp.owner.dto.SendLogDto;
-import com.bankapp.owner.dto.mempoolBlocksJson;
 import com.bankapp.owner.model.Account;
-import com.bankapp.owner.model.Mempool;
+import com.bankapp.owner.model.CheckSend;
 import com.google.gson.Gson;
 
 
@@ -27,6 +26,61 @@ public class AccountDao {
 	private Connection conn = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
+	
+	public CheckSend checkPhone(String receiver) {
+		final String SQL = "select phone from account where phone = ?";
+		CheckSend checkSend = null;
+		try {
+			conn = DBConn.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			//물음표 완성
+			pstmt.setString(1, receiver);
+			
+			rs = pstmt.executeQuery();		
+			if(rs.next()) {
+				checkSend = new CheckSend();
+				checkSend.setReceiver(rs.getString(1));
+			}
+			return checkSend;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(TAG+"checkPhone : "+e.getMessage());
+		}finally {
+			DBConn.close(conn, pstmt,rs);
+		}
+		return null;
+	}
+	
+	public Account pwdConfirm(String pwd, String phone) {
+		final String SQL = "select id,name,pwd,phone,amount from account where pwd = ? and phone = ?";
+			Account account = null;
+			try {
+				conn = DBConn.getConnection();
+				pstmt = conn.prepareStatement(SQL);
+				//물음표 완성
+				pstmt.setString(1, pwd);
+				pstmt.setString(2, phone);
+				
+				rs = pstmt.executeQuery();
+				if(rs.next()) {
+					account = new Account();
+					account.setId(rs.getInt("id"));
+					account.setName(rs.getString("name"));
+					account.setPwd(rs.getString("pwd"));
+					account.setPhone(rs.getString("phone"));
+					account.setAmount(rs.getInt("amount"));
+				}
+				return account;
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(TAG+"pwdConfirm : "+e.getMessage());
+			}finally {
+				DBConn.close(conn, pstmt,rs);
+			}
+			return null;
+		}
 	
 	public int insertBlockList (String hash, String previousHash, String data,String timestamp,int nonce,int nodeNumber) {
 		final String SQL = "insert into blocklist(id,hash,previoushash,data,timestamp,nonce,nodeNum) values(blocklist_seq.nextval,?,?,?,?,?,?)";
@@ -214,35 +268,7 @@ public class AccountDao {
 		}
 	
 	
-	public Account pwdConfirm(String pwd, String phone) {
-		final String SQL = "select id,name,pwd,phone,amount from account where pwd = ? and phone = ?";
-			Account account = null;
-			try {
-				conn = DBConn.getConnection();
-				pstmt = conn.prepareStatement(SQL);
-				//물음표 완성
-				pstmt.setString(1, pwd);
-				pstmt.setString(2, phone);
-				
-				rs = pstmt.executeQuery();
-				if(rs.next()) {
-					account = new Account();
-					account.setId(rs.getInt("id"));
-					account.setName(rs.getString("name"));
-					account.setPwd(rs.getString("pwd"));
-					account.setPhone(rs.getString("phone"));
-					account.setAmount(rs.getInt("amount"));
-				}
-				return account;
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println(TAG+"pwdConfirm : "+e.getMessage());
-			}finally {
-				DBConn.close(conn, pstmt,rs);
-			}
-			return null;
-		}
+	
 	
 	
 	
