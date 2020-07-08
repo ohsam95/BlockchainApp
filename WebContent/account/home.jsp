@@ -310,7 +310,7 @@ function takeJson(){
 			{
 				"prvHash" : prvHash,
 				"dataJson" : result,
-				"difficulty" : 1
+				"difficulty" : 2
 			}
 			//제이슨화
 			var dataJsonDto = JSON.stringify(dataJson);
@@ -323,11 +323,11 @@ function takeJson(){
 		alert("블록체인 종료")
 	});
 }
- 
 
 function StartBlock() {
 	takeJson();
 	//노드에게 데이터 전송 반복하기 - 시간 설정 가능 (600000은 10분)
+	//테스트를 위해 10초 설정!
 	setInterval(takeJson,10000);
 }
 

@@ -1,6 +1,8 @@
 package com.bankapp.owner.action;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -40,12 +42,16 @@ public class SendProcAction implements Action{
 		int sendAmount = Integer.parseInt(request.getParameter("sendAmount"));
 		String pwd = request.getParameter("pwd");
 		String phone = request.getParameter("phone");
+		Date date = new Date();
+		String time = date.toString();
+		System.out.println(time);
 
 		//이체 내역의 보안을 위해 해쉬화하기		
 			MempoolJson mempoolJson = MempoolJson.builder()
 					.receiver(receiver)
 					.sendAmount(sendAmount)
 					.phone(phone)
+					.time(time)
 					.build();
 		Gson gson = new Gson();
 		String sendInfo = gson.toJson(mempoolJson);
